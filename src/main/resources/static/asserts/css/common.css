@@ -1,0 +1,7 @@
+/*顶部导航栏固定在顶部会导致下方页面内容被覆盖，因此使用顶部距离控制*/
+#navbar_box{
+    padding-bottom: 70px;
+}
+.container{
+    padding-top: 70px;
+}
