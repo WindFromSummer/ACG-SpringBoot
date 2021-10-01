@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>身份请求处理页面</title>
+
+    <link rel="stylesheet" href="/asserts/css/bootstrap.min.css" />
+    <script src="/asserts/js/jquery-3.3.1.js"></script>
+    <script src="/asserts/js/bootstrap.min.js"></script>
+    <script src="/asserts/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+
+</head>
+<body>
+    <!--引入头部head.html-->
+    <div th:include="navbar :: head"></div>
+    <div class="container">
+        <div class="row">
+            <!--引入侧边功能按钮列表-->
+            <div th:include="identity_left_button :: identity_left_button (activeUri='identity_apply')" class="col col-2" style="border: solid 1px;height: 800px;padding-top: 10px"></div>
+            <div id="list_demo" class="col col-10" style="border: solid 1px ">
+                <p class="text-center">审核认证</p><hr><br>
+                <form class="form-horizontal" th:action="@{/identity/apply/reply}" method="post">
+                    <input type="hidden" name="id" th:value="${apply.id}">
+                    <div class="form-group">
+                        <label>用户id</label>
+                        <input type="text" name="userId" th:value="${apply.userId}"  class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>申请身份</label>
+                        <input type="hidden" name="identityId" th:value="${apply.identityId}"  class="form-control">
+                        <input type="text" name="identityName" th:value="${apply.identityName}"  class="form-control">
+                    </div>
+                    <div >
+                        <button>查看证件内容</button>
+                        <img th:src="${apply.content}" style="width: 100%;height: auto">
+                    </div>
+                    <div class="form-group">
+                        <label>审核选项</label>
+                        <select class="form-control" name="applyState">
+                            <option name="applyState" value="2">通过</option>
+                            <option name="applyState" value="1">不通过</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>审核意见</label>
+                        <input type="text" name="replyInfo">
+                    </div>
+                    <button type="submit" class="btn btn-primary">提交审核结果</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

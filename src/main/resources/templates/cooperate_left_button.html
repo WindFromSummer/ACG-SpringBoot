@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>合作页面侧边栏</title>
+
+    <link rel="stylesheet" th:href="@{/asserts/css/bootstrap.min.css}" />
+    <script th:src="@{/asserts/js/jquery-3.3.1.js}" src="asserts/js/jquery-3.3.1.js"></script>
+    <script th:src="@{/asserts/js/bootstrap.min.js}"></script>
+    <script th:src="@{/asserts/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+</head>
+<body>
+<div th:fragment="cooperate_left_button" id="cooperate_left_button">
+    <div class="btn-group-vertical" role="group">
+        <ul class="list-unstyled">
+            <li><a th:class="${activeUri== 'cooperate_search'?'btn btn-primary active':'btn btn-primary'}" th:href="@{/cooperate/}">寻找合作</a></li>
+            <li><a th:class="${activeUri== 'cooperate_pub'?'btn btn-primary active':'btn btn-primary'}" th:href="@{/cooperate/pub}">发布合作</a></li>
+            <li><a th:class="${activeUri== 'cooperate_query'?'btn btn-primary active':'btn btn-primary'}" th:href="@{/cooperate/}">查看合作</a></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/asserts/css/bootstrap.min.css"/>
+    <!--<link rel="stylesheet" href="bootstrap-theme.min.css" />-->
+    <script src="asserts/js/jquery-3.3.1.js" type="text/javascript" th:src="@{/asserts/js/jquery-3.3.1.js}"></script>
+    <script src="/asserts/js/bootstrap.min.js"></script>
+    <script src="/asserts/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        function toIndex() {
+            var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+            var url = basePath+ "/t11";
+            $("#t1").attr(href)
+        }
+        /*]]>*/
+    </script>
+</head>
+<body>
+    <p>描述： 使用springboot+thymeleaf模板引擎 在html页面中使用a标签中的@{/xxx}请求到对应的controller中 结合return "xxx" 跳转到对应页面的xxx.html  但是由于某些原因 现在需要使用ajax的get请求进行相同的操作  但结果无法跳转到对应页面 在此页面测试</p>
+    <a th:href="@{/t11}">跳转到主页</a>
+    <a id="t1" href="#" th:onclick="toIndex()">跳转到主页</a>
+</body>
+</html>

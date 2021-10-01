@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script th:src="@{/asserts/js/jquery-3.3.1.js}" src="asserts/js/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/bootstrap.min.css}" />
+    <script th:src="@{/asserts/js/bootstrap.min.js}"></script>
+    <script th:src="@{/asserts/js/bootstrap.bundle.min.js}"></script>
+</head>
+<body>
+    <div class="container">
+        <a th:href="@{/editor}">测试富文本编辑器</a>
+        <a th:href="@{/testFenye}">测试分页功能</a>
+        <a th:href="@{/comicImg/}">去上传图片页面测试上传图片功能</a>
+        <form class="form-inline my-2 my-lg-0" th:action="@{/page}" method="post">
+            <input class="form-control mr-sm-4" type="search" placeholder="漫展" th:value="${key == null?'漫展':key}" aria-label="Search" id="key" name="key">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
+        </form>
+    </div>
+</body>
+</html>

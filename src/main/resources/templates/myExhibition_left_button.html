@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>展会页面侧边栏</title>
+
+    <link rel="stylesheet" th:href="@{/asserts/css/bootstrap.min.css}" />
+    <script th:src="@{/asserts/js/jquery-3.3.1.js}" src="asserts/js/jquery-3.3.1.js"></script>
+    <script th:src="@{/asserts/js/bootstrap.min.js}"></script>
+    <script th:src="@{/asserts/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+</head>
+<body>
+<div th:fragment="ex_left_button" id="exhibition_list">
+    <div class="btn-group-vertical" role="group">
+        <ul class="list-unstyled">
+            <li><a th:href="@{/exhibition/my/}+${session.SPRING_SECURITY_CONTEXT.authentication.principal.id}" th:class="${activeUri== 'myEx'?'btn btn-primary active':'btn btn-primary'}">我的展会</a></li>
+            <li><a th:href="@{/publish_ex}" th:class="${activeUri== 'ex_publish'?'btn btn-primary active':'btn btn-primary'}">发布展会</a></li>
+            <li><a  href="#" th:class="${activeUri== 'ex_detal_publish'?'btn btn-primary active':'btn btn-primary'}" th:onclick="addDetail()">发布公告</a></li>
+            <li><a href="#" th:class="${activeUri== 'ex_update'?'btn btn-primary active':'btn btn-primary'}" th:onclick="update_ex()">修改展会</a></li>
+        </ul>
+    </div>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        function addDetail() {
+            alert("发布公告清前往我的展会->管理公告-》添加公告页面进行操作");
+        }
+
+        function update_ex() {
+            alert("修改展会清前往我的展会->修改展会页面进行操作");
+        }
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

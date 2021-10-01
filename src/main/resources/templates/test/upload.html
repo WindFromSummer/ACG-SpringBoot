@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>上传图片页面</title>
+</head>
+<body>
+    <div th:include="navbar :: head"></div>
+    <div class="container col-6">
+        <h2 align="center">认证身份</h2>
+    </div>
+    <hr><br>
+    <div class="container col-6">
+        <div th:width="400px">
+            <form class="form-horizontal" th:action="@{/user/register}" method="post">
+                <div class="form-group">
+                    <label>选择身份</label><br><br>
+                    <select class="form-control" id="exampleFormControlSelect1">
+                        <option>-------------------------------------选择您要申请认证的身份----------------------------------------</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                    <input type="hidden" id="username_msg">
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label>上传认证文件</label><br><br>
+                    <form th:action="@{/upload/image}" method="post" enctype="multipart/form-data">
+                        <input type="file" class="file1" name="file" />
+                        <button type="submit" >上传</button>
+                    </form>
+                </div>
+                <hr><br>
+                </div>
+                <button type="submit" class="btn btn-primary" align="center">申请认证</button>
+            </form>
+        </div>
+    </div>
+
+    <br><br><br><br><br><br><br>
+    <form th:action="@{/upload/image}" method="post" enctype="multipart/form-data">
+        <input type="file" class="file1" name="file" />
+        <button type="submit" >上传</button>
+    </form>
+</body>
+</html>

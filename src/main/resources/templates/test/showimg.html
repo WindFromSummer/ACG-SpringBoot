@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<head>
+    <meta charset="UTF-8">
+    <title>测试thymeleaf展示图片的路径如何引入</title>
+</head>
+<body>
+    <div>
+        <p>经过对比发现 在thymeleaf模板引擎中使用 th:src="@{asserts/img/3.jpg}" 可以访问资源 在asserts文件夹外不能访问,但在yml中配置spring.mvc.static-path-pattern=/static/**后上述正确的写法也无法正常显示</p>
+    </div>
+    <div>
+        <!--<img th:src="@{../static/asserts/img/3.jpg}">
+        <img th:src="@{static/asserts/img/3.jpg}">
+        <img src="../static/asserts/img/3.jpg">
+        <img src="static/asserts/img/3.jpg">
+
+        <img th:src="@{asserts/img/3.jpg}">-->
+
+        <img src="../static/images/3.jpg"/><hr><br>
+        <img src="static/images/3.jpg"/><hr><br>
+        <img src="images/3.jpg"/><hr><br>
+        <!--<img th:src="../static/images/3.jpg" />-->
+        <!--<img th:src="static/images/3.jpg" />-->
+        <!--<img th:src="images/3.jpg" />-->
+        <img th:src="@{../static/images/3.jpg}" /><hr><br>
+        <img th:src="@{static/images/3.jpg}" /><hr><br>
+        <img th:src="@{images/3.jpg}" /><hr><br>
+
+        <img th:src="@{../../static/asserts/img/3.jpg}" /><hr><br>
+        <img th:src="@{static/asserts/img/3.jpg}" /><hr><br>
+        <img th:src="@{asserts/img/3.jpg}" />  正确<hr><br>
+
+        <img src="asserts/img/3.jpg"/> 正确<hr><br>
+        <img src="images/3.jpg"/><hr><br>
+
+
+
+
+
+    </div>
+</body>
+</html>

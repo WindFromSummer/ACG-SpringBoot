@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>漫展公告内容页面</title>
+
+    <link rel="stylesheet" href="/asserts/css/bootstrap.min.css" />
+    <script src="/asserts/js/jquery-3.3.1.js" type="text/javascript" th:src="@{/asserts/js/jquery-3.3.1.js}"></script>
+    <script src="/asserts/js/bootstrap.min.js"></script>
+    <script src="/asserts/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+
+</head>
+<body>
+<!--引入头部head.html-->
+<div th:include="navbar :: head"></div>
+<!--内容-->
+<div id="content" class="container">
+    <div id="detail" style="height: 500px">
+        <div style="border: #00a0e9 solid 1px">
+            <input type="hidden" id="detailId" th:value="${detail.id}">
+            <input type="hidden" id="exhibitionId" th:value="${detail.exhibitionId}">
+            <a th:text="${detail.title}" th:href="@{/}"></a>
+            <p th:text="${#dates.format(detail.createAt,'yyyy-MM-dd HH:mm:ss')}"></p>
+        </div>
+        <div id="note_info" th:utext="${detail.content}" style="border: #00a0e9 solid 1px"></div>
+    </div>
+</div>
+</body>
+</html>

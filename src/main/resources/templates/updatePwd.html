@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>修改密码页面</title>
+
+    <link rel="stylesheet" href="/asserts/css/bootstrap.min.css" />
+    <script src="/asserts/js/jquery-3.3.1.js"></script>
+    <script src="/asserts/js/bootstrap.min.js"></script>
+    <script src="/asserts/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+
+</head>
+<body>
+    <!--引入头部head.html-->
+    <div th:include="navbar :: head"></div>
+    <div class="container">
+        <div class="row">
+            <!--引入侧边功能按钮列表-->
+            <div th:include="user_left_button :: user_left_button (activeUri='updatePwd')" class="col col-2" style="border: solid 1px;height: 800px;padding-top: 10px"></div>
+            <div id="list_demo" class="col col-10" style="border: solid 1px;height: 800px;padding-top: 10px">
+                <h3 class="text-center">修改密码页面</h3><hr><br>
+                <form class="form-horizontal" th:action="@{/user/updatePwd}" method="post">
+                    <div class="form-group">
+                        <label for="phone">手机号</label>
+                        <input type="text" class="form-control-sm" id="phone" name="phone">
+                        <input type="button" id="btn_code" th:value="点击获取验证码" th:onclick="send_code()">
+                    </div>
+                    <div class="form-group">
+                        <label for="code">验证码</label>
+                        <input type="text" class="form-control" name="code" id="code">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">输入新密码</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                    </div>
+                    <div class="form-group">
+                        <label for="re_password">确认新密码</label>
+                        <input type="password" class="form-control" id="re_password">
+                    </div>
+                    <button type="submit" class="btn btn-primary offset-5 ">修改密码</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    // 向指定手机发送修改密码验证码
+    function send_code(){
+        var phone = $("#phone").val();
+        $.post(/*[[@{/user/pwdCode}]]*/,{phone : phone},function (data) {
+            alert(data);
+        });
+        alert("验证码已发送");
+        $("#btn_code").val("重新获取验证码");
+    }
+    /*]]>*/
+</script>
+</html>

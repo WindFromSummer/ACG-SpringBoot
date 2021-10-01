@@ -1,0 +1,84 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: user-service
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://120.27.212.247:3306/ACG?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    #    url: jdbc:mysql://localhost:3306/ACG?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC GMT%2B8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    initialization-mode: always
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 1
+      min-idle: 1
+      max-active: 20
+      max-wait: 3000
+      validation-query: SELECT 1 FROM DUAL
+      test-on-borrow: false
+      test-on-return: false
+      test-while-idle: true
+      pool-prepared-statements: true
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      filters: stat,wall,slf4j
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        login-username: admin
+        login-password: root
+        allow: 127.0.0.1
+  redis:
+    #连接池
+#    jedis:
+#      pool:
+#        #最大连接个数
+#        max-active: 10
+#        #等待时间
+#        max-wait: 6000ms
+#        #最大空闲
+#        max-idle: 8
+#        #初始化最小
+#        min-idle: 5
+#        #操作第几个库
+#    database: 1
+    #redis路径
+    host: 120.27.212.247
+    password: document123..
+  thymeleaf:
+    cache: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+acg:
+  sms:
+    accessKeyId: LTAI4FomDSdvXyJK1meAKYhw
+    accessKeySecret: POp1U9ePiSLEGgSnvXLzpYxN7UMJLd
+    signName: ACG爱好者
+    verifyCodeTemplate: SMS_185560295
+  pwdsms:
+    accessKeyId: LTAI4FomDSdvXyJK1meAKYhw
+    accessKeySecret: POp1U9ePiSLEGgSnvXLzpYxN7UMJLd
+    signName: ACG爱好者
+    verifyCodeTemplate: SMS_193246283
+#开启驼峰命名法的映射
+mybatis:
+  type-aliases-package: zc.free.acg.domain
+  mapper-locations: classpath:mapper/*.xml
+#  config-location: classpath:mybatis-config.xml
+#  mapper-locations: classpath:mapper/*.xml
+#文件上传系统
+fdfs:
+  so-timeout: 2000
+  connect-timeout: 2000
+  thumb-image:
+    width: 60
+    height: 60
+  tracker-list:
+    - 120.27.212.247:22122

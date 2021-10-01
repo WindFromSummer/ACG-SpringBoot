@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>我的身份页面</title>
+
+    <link rel="stylesheet" href="/asserts/css/bootstrap.min.css" />
+    <script src="/asserts/js/jquery-3.3.1.js"></script>
+    <script src="/asserts/js/bootstrap.min.js"></script>
+    <script src="/asserts/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+
+</head>
+<body>
+    <!--引入头部head.html-->
+    <div th:include="navbar :: head"></div>
+    <div class="container">
+        <div class="row">
+            <!--引入侧边功能按钮列表-->
+            <div th:include="identity_left_button :: identity_left_button (activeUri='myIdentity')" class="col col-2" style="border: solid 1px;height: 800px;padding-top: 10px"></div>
+            <div id="list_demo" class="col col-10" style="height: 800px; border: solid 1px;padding-top: 10px">
+                <p class="text-center">我的身份</p><hr><br>
+                <div class="card mb-12" style="max-width: 100%" th:each="item:${data.items}">
+                    名称<p th:text="${item.name}"></p>
+                    获取时间<p th:text="${#dates.format(item.createAt,'yyyy-MM-dd')}"></p>
+                </div>
+                <!--分月栏-->
+                <nav aria-label="Page navigation example" th:if="${data.total}>5">
+                    <ul class="pagination justify-content-center">
+                        <li th:class="${curPage}==1?'page-item disabled':'page-item'">
+                            <a class="page-link" th:href="@{/identity/queryByIdWithPage/}+${session.SPRING_SECURITY_CONTEXT.authentication.principal.id} + '?page='+ (${curPage} - 1)" tabindex="-1" aria-disabled="true">上一页</a>
+                        </li>
+                        <!--显示3个结果-->
+                        <li th:each=" i:${#numbers.sequence((curPage<=1)?1:(curPage -1), (curPage+1)>=data.totalPage?data.totalPage:((curPage==1)?curPage+2:curPage+1))}" th:class="${curPage}==${i}?'page-item active':'page-item'"><a th:text="${i}"  class="page-link" th:href="@{/identity/queryByIdWithPage/}+${session.SPRING_SECURITY_CONTEXT.authentication.principal.id} + '?page='+ ${i}"></a></li>
+                        <!--从1到结束-->
+                        <!--<li th:each=" i:${#numbers.sequence(1, data.totalPage)}" th:class="${curPage}==${i}?'page-item active':'page-item'"><a th:text="${i}"  class="page-link" href="#" th:onclick="sub([[${i}]])"></a></li>-->
+                        <li th:class="${curPage}==${data.totalPage}?'page-item disabled':'page-item'">
+                            <a class="page-link" th:href="@{/identity/queryByIdWithPage/}+${session.SPRING_SECURITY_CONTEXT.authentication.principal.id} + '?page='+ (${curPage} + 1)">下一页</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

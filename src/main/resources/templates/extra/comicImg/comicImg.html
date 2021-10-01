@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>主页</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script th:src="@{/asserts/js/jquery-3.3.1.js}" src="asserts/js/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/bootstrap.min.css}" />
+    <script th:src="@{/asserts/js/bootstrap.min.js}"></script>
+    <script th:src="@{/asserts/js/bootstrap.bundle.min.js}"></script>
+    <style type="text/css">
+        /*轮播窗口的高度和图片超出box的隐藏*/
+        .damu-carousel{
+            height: 500px;
+            overflow: hidden;
+        }
+        #content{
+            padding-top: 5px;
+        }
+    </style>
+</head>
+<body>
+<!--引入头部head.html-->
+<div th:include="navbar :: head"></div>
+<!--内容-->
+<div id="content" class="container">
+    <form th:action="@{/comicImg/upload}" method="post" enctype="multipart/form-data">
+        选择图片：
+        <input type="file" name="img">
+        <button type="submit">上传</button>
+    </form><hr><br>
+    <button><a th:href="@{/comicImg/query}">查询图片</a></button>
+    <div th:each="img:${imgs}" style="border: solid 1px dodgerblue;">
+        <img th:src="${img.img}" style="width: 100%;height: 100%">
+    </div><hr><br>
+</div>
+</body>
+</html>

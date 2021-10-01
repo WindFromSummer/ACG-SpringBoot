@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>合作页面</title>
+
+    <link rel="stylesheet" href="/asserts/css/bootstrap.min.css" />
+    <script src="/asserts/js/jquery-3.3.1.js"></script>
+    <script src="/asserts/js/bootstrap.bundle.min.js"></script>
+    <script src="/asserts/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        function search_cooperate(page) {
+            $("#cooperate_page").val(page);
+            $("#cooperate_search_form").submit();
+        }
+        /*]]>*/
+    </script>
+
+</head>
+<body>
+<!--引入头部head.html-->
+<div th:include="navbar :: head"></div>
+<div class="container">
+    <div class="row">
+        <!--引入侧边功能按钮列表-->
+        <div th:include="cooperate_left_button :: cooperate_left_button (activeUri='cooperate_search')" class="col col-2" style="border: solid 1px;height: 800px;padding-top: 10px"></div>
+        <div id="list_demo" class="col col-10" style="border: solid 1px;height: 800px;padding-top: 10px">
+            <div align="center" style="padding-top: 50px">
+                <form id="cooperate_search_form" th:action="@{/cooperate/search}" method="post">
+                    <Input name="key" type="text" th:value="${key}">
+                    <input id="cooperate_page" type="hidden" name="page" value="1">
+                    <input type="submit" value="寻找合作">
+                </form>
+            </div><hr>
+            <table class="table-striped" style="width: 100%">
+                <thead>
+                <tr>
+                    <td>合作名称</td>
+                    <td>合作内容</td>
+                    <td>地点</td>
+                    <td>时间</td>
+                    <td>适合人群</td>
+                    <td>发布人</td>
+                    <td>详情</td>
+                </tr>
+                </thead>
+                <tbody th:if="${key}!=null">
+                <tr th:each="item:${data.items}">
+                    <td th:text="${item.cooperateName}"><input type="hidden" th:text="${item.id}"></td>
+                    <td>
+                        <span th:text="${item.content}"></span>
+                    </td>
+                    <td th:text="${item.location}"></td>
+                    <td th:text="${#dates.format(item.createAt,'yyyy-MM-dd')}"></td>
+                    <td th:text="${item.suitFor}"></td>
+                    <td th:text="${item.ownerName}"><input  th:text="${item.ownerId}"></td>
+                    <td><!--查看合作详情按钮-->
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" th:data-target="'#exampleModal' +${item.id}">
+                            详情
+                        </button>
+                        <!-- 公告详情模态框 -->
+                        <div class="modal fade" th:id="exampleModal +${item.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel" th:text="${item.cooperateName}">Modal title</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body" th:utext="${item.content}">
+                                        ...
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div></td>
+                </tr>
+                </tbody>
+            </table>
+            <!--分页栏-->
+            <nav aria-label="Page navigation example" th:if="${data}!=null">
+                <ul class="pagination justify-content-center">
+                    <!--前一页-->
+                    <li th:class="${curPage}==1?'page-item disabled':'page-item'">
+                        <a class="page-link" href="#" th:onclick="search_cooperate([[${curPage}-1]])" tabindex="-1" aria-disabled="true">上一页</a>
+                    </li>
+                    <!--顺序页码-->
+                    <li th:each=" i:${#numbers.sequence((curPage<=1)?1:(curPage -1), (curPage+1)>=data.totalPage?data.totalPage:((curPage==1)?curPage+2:curPage+1))}" th:class="${curPage}==${i}?'page-item active':'page-item'"><a th:text="${i}"  class="page-link" href="#" th:onclick="search_cooperate([[${i}]])"></a></li>
+                    <!--后一页-->
+                    <li th:class="${curPage}==${data.totalPage}?'page-item disabled':'page-item'">
+                        <a class="page-link" href="#" th:onclick="search_cooperate([[${curPage}+1]])">下一页</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+</body>
+</html>

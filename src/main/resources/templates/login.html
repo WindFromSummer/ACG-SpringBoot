@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>登录页面</title>
+
+    <link rel="stylesheet" href="asserts/css/bootstrap.min.css"/>
+    <script src="/asserts/js/jquery-3.3.1.js" type="text/javascript" th:src="@{/asserts/js/jquery-3.3.1.js}"></script>
+    <script src="/asserts/js/bootstrap.min.js"></script>
+    <script src="/asserts/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+
+    <style>
+        #title{
+            text-align: center;
+            font-size: 25px;
+            margin-bottom: 20px;
+        }
+        #page-info{
+            border: #00a0e9 1px solid;
+            margin-top: 20px;
+            padding-top: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+        }
+        .form-control{
+            width: 50%;
+        }
+    </style>
+
+</head>
+<body>
+    <!--引入头部head.html-->
+    <div th:include="navbar :: head"></div>
+    <div class="container">
+        <div id="page-info" class="col-md-8 offset-2">
+            <p id="title">欢迎登录ACG展会系统</p>
+            <form th:action="@{/login}" method="post" class ="text-center">
+                <span>用户名：</span><input type="text" name="username"><br><br>
+                <span>密&nbsp&nbsp&nbsp&nbsp码：</span><input type="password" name="password"><br><br>
+                <button type="submit" class="btn btn-primary">登录</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

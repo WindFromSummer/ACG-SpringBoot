@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>个人信息页面</title>
+
+    <link rel="stylesheet" href="/asserts/css/bootstrap.min.css" />
+    <script src="/asserts/js/jquery-3.3.1.js"></script>
+    <script src="/asserts/js/bootstrap.min.js"></script>
+    <script src="/asserts/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+
+    <script type="text/javascript">
+        $(function () {
+            loadUserInfo();
+        })
+    </script>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        function loadUserInfo() {
+            var id = $("#userId").val();
+            var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+            var url = basePath+ "/user/query/" + id;
+            $.get(url,function (data) {
+                $("#username").attr('placeholder',data.username);
+                $("#phone").attr('placeholder',data.phone);
+                if(data.gender==0) {
+                    $("#gender").val("0")
+                } else if (data.gender == 1) {
+                    $("#gender").val("1");
+                }
+            });
+        }
+        /*]]>*/
+    </script>
+</head>
+<body>
+    <!--引入头部head.html-->
+    <div th:include="navbar :: head"></div>
+    <div class="container">
+        <div class="row con">
+            <!--引入侧边功能按钮列表-->
+            <div th:include="user_left_button :: user_left_button (activeUri='myinfo')" class="col col-2"  style="border: solid 1px;height: 800px;padding-top: 10px"></div>
+            <div id="list_demo" class="col col-10" style="height: 800px; border: solid 1px;padding-top: 10px">
+                <h3 class="text-center">个人信息</h3><hr><br>
+                姓名：<input id="username" class="form-control" type="text" placeholder="" readonly><hr><br>
+                手机号：<input id="phone" class="form-control" type="text" placeholder="" readonly><hr><br>
+                <form th:action="@{/user/updateUserInfo}" method="post">
+                    <input type="hidden" name="id" th:value="${session.SPRING_SECURITY_CONTEXT.authentication.principal.id}">
+                    性别：
+                    <div class="form-group">
+                        <select class="form-control" id="gender" name="gender">
+                            <option value="0" name="gender" id="male">男</option>
+                            <option value="1" name="gender" id="female">女</option>
+                        </select>
+                    </div>
+                    <hr><br>
+                    <button type="submit" class="btn btn-primary col-md-2 offset-5">修改信息</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

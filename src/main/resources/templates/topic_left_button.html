@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>话题中心侧边栏</title>
+
+    <link rel="stylesheet" th:href="@{/asserts/css/bootstrap.min.css}" />
+    <script th:src="@{/asserts/js/jquery-3.3.1.js}" src="asserts/js/jquery-3.3.1.js"></script>
+    <script th:src="@{/asserts/js/bootstrap.min.js}"></script>
+    <script th:src="@{/asserts/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+
+</head>
+<body>
+<div th:fragment="topic_left_button" id="topic_list">
+    <div class="btn-group-vertical" role="group">
+        <ul class="list-unstyled">
+            <li><a th:href="@{/topic/pub}" th:class="${activeUri== 'topic_publish'?'btn btn-primary active':'btn btn-primary'}">发布话题</a></li>
+            <li><a th:href="@{/}"  th:class="${activeUri== 'topic_search'?'btn btn-primary active':'btn btn-primary'}">查询话题</a></li>
+            <li><a th:href="@{/}" th:class="${activeUri== 'topic_my'?'btn btn-primary active':'btn btn-primary'}">我的话题</a></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

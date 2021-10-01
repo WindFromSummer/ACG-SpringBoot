@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>合作页面</title>
+
+    <link rel="stylesheet" href="/asserts/css/bootstrap.min.css" />
+    <script src="/asserts/js/jquery-3.3.1.js"></script>
+    <script src="/asserts/js/bootstrap.min.js"></script>
+    <script src="/asserts/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+
+</head>
+<body>
+<!--引入头部head.html-->
+<div th:include="navbar :: head"></div>
+<div class="container">
+    <div class="row">
+        <!--引入侧边功能按钮列表-->
+        <div th:include="cooperate_left_button :: cooperate_left_button (activeUri='cooperate_pub')" class="col col-2" style="border: solid 1px;height: 800px;padding-top: 10px"></div>
+        <div id="list_demo" class="col col-10" style="border: solid 1px;height: 800px;padding-top: 10px">
+            <p class="text-center">发布合作</p><hr><br>
+            <form class="form-horizontal" th:action="@{/cooperate/pub}" method="post">
+                <input type="hidden" id="ownerId" name="ownerId" th:value="${session.SPRING_SECURITY_CONTEXT.authentication.principal.id}">
+                <div class="form-group">
+                    <label for="cooperate_name">合作名称</label>
+                    <input type="text" class="form-control" id="cooperate_name" name="cooperate_name" >
+                </div>
+                <div class="form-group">
+                    <label for="content">合作内容</label>
+                    <input type="text-area" class="form-control" id="content" name="content" >
+                </div>
+                <div class="form-group">
+                    <label for="suitFor">适合人群</label>
+                    <input type="text-area" class="form-control" id="suitFor" name="suitFor" >
+                </div>
+                <div class="form-group">
+                    <label for="location">地点</label>
+                    <input type="text-area" class="form-control" id="location" name="location" >
+                </div>
+                <button type="submit" class="btn btn-primary">发布合作</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

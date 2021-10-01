@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/asserts/css/bootstrap.min.css"/>
+    <!--<link rel="stylesheet" href="bootstrap-theme.min.css" />-->
+    <script src="/asserts/js/jquery-3.3.1.js" type="text/javascript" th:src="@{/asserts/js/jquery-3.3.1.js}"></script>
+    <script src="/asserts/js/bootstrap.min.js"></script>
+    <script src="/asserts/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        function toIndex() {
+            var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+            var url = basePath+ "/t11";
+            $("#t1").attr(href)
+        }
+        /*]]>*/
+    </script>
+</head>
+<body>
+    <div th:utext="${data.content}"></div>
+</body>
+</html>

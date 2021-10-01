@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>发布展会页面</title>
+
+    <link rel="stylesheet" href="/asserts/css/bootstrap.min.css" />
+    <script src="/asserts/js/jquery-3.3.1.js"></script>
+    <script src="/asserts/js/bootstrap.min.js"></script>
+    <script src="/asserts/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+
+</head>
+<body>
+    <!--引入头部head.html-->
+    <div th:include="navbar :: head"></div>
+    <div class="container">
+        <div class="row">
+            <!--引入侧边功能按钮列表-->
+            <div th:include="myExhibition_left_button :: ex_left_button (activeUri='ex_publish')" class="col col-2" style="border: solid 1px;height: 800px;padding-top: 10px"></div>
+            <div id="list_demo" class="col col-10" style="border: solid 1px;height: 800px;padding-top: 10px">
+                <p class="text-center">发布展会</p><hr><br>
+                <form class="form-horizontal" th:action="@{/exhibition/add}" method="post" enctype="multipart/form-data">
+                    <input id="userId" type="hidden" name="owner" th:value="${session.SPRING_SECURITY_CONTEXT.authentication.principal.id}"/>
+                    <div class="form-group">
+                        <label for="name">展会名称</label>
+                        <input type="text" class="form-control" id="name" name="name" >
+                    </div>
+                    <div class="form-group">
+                        <label>上传展会海报</label>
+                        <input type="file" name="file">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">展会地址</label>
+                        <input type="text" class="form-control" id="address" name="address">
+                    </div>
+                    <div class="form-group">
+                        <label for="start_at">开始时间</label>
+                        <input type="datetime-local" class="form-control" id="start_at" name="start_at">
+                    </div>
+                    <div class="form-group">
+                        <label for="end_at">结束时间</label>
+                        <input type="datetime-local" class="form-control" id="end_at" name="end_at" >
+                    </div>
+                    <div class="form-group">
+                        <label>展会类型</label>
+                        <select>
+                            <option name="type" value="1">漫展</option>
+                            <option name="type" value="2">科技展</option>
+                            <option name="type" value="3">游戏展</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tips">展会标签</label>
+                        <input type="text" class="form-control" id="tips" name="tips" >
+                    </div>
+                    <button type="submit" class="btn btn-primary">发布展会</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

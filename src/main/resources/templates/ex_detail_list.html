@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>展会扩展信息栏</title>
+
+    <link rel="stylesheet" href="/asserts/css/bootstrap.min.css" />
+    <script src="/asserts/js/jquery-3.3.1.js" type="text/javascript" th:src="@{/asserts/js/jquery-3.3.1.js}"></script>
+    <script src="/asserts/js/bootstrap.min.js"></script>
+    <script src="/asserts/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+
+</head>
+<body>
+<div id="search_list" class="row" style="border: solid 1px" th:fragment="ex_detail_list">
+    <div class="col text-center" th:style="${activeUri== 'detail'?'border: solid 1px':''}"><a th:href="@{/exhibition/details/}+${exhibition.id}">公告</a></div>
+    <div class="col text-center" th:style="${activeUri== 'comment'?'border: solid 1px':''}"><a th:href="@{/exhibitionMsg/}+${exhibition.id}">评论</a></div>
+</div>
+</body>
+</html>

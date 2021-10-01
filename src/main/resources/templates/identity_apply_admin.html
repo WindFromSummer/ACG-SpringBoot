@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>身份请求管理页面</title>
+
+    <link rel="stylesheet" href="/asserts/css/bootstrap.min.css" />
+    <script src="/asserts/js/jquery-3.3.1.js"></script>
+    <script src="/asserts/js/bootstrap.min.js"></script>
+    <script src="/asserts/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+
+</head>
+<body>
+    <!--引入头部head.html-->
+    <div th:include="navbar :: head"></div>
+    <div class="container">
+        <div class="row">
+            <!--引入侧边功能按钮列表-->
+            <div th:include="identity_left_button :: identity_left_button (activeUri='identity_reply')" class="col col-2" style="border: solid 1px;height: 800px;padding-top: 10px"></div>
+            <div id="list_demo" class="col col-10" style="border: solid 1px ">
+                <p class="text-center">身份处理</p><hr><br>
+                <table class="table-striped" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <td>申请人</td>
+                            <td>申请身份</td>
+                            <td>申请时间</td>
+                            <td>操作</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="apply:${applies}">
+                            <td th:text="${apply.userId}"></td>
+                            <input th:value="${apply.identityId}" type="hidden">
+                            <td th:text="${apply.identityName}"></td>
+                            <td th:text="${#dates.format(apply.applyAt,'yyyy-MM-dd HH:mm:ss')}"></td>
+                            <td><a class="btn btn-primary" th:href="@{/identity/apply/reply/}+${apply.id}">去审核</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="asserts/js/jquery-3.3.1.js" type="text/javascript" th:src="@{asserts/js/jquery-3.3.1.js}"></script>
+</head>
+<body>
+    <input type="text" id="name"/>
+    <button type="button" th:onclick="ajaxSubmit()">提交</button>
+    <div id="user"></div>
+</body>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+
+    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+
+    /*function ajaxSubmit() {
+        var name = $("#name").val();
+        console.log(name);
+        $.post(/!*[[@{/testAjax}]]*!/,{name : name},function (data) {
+            alert(data);
+            $("#user").html(data.usernname);
+        });
+    };*/
+    function ajaxSubmit() {
+        var name = $("#name").val();
+        var id = Number('1');
+        console.log(name);
+        $.get(/*[[@{/p/{id}(id = 11})}]]*/,function (data) {
+            alert(data);
+            $("#user").html(data.usernname);
+        });
+    };
+
+    /*$(document).ready(function () {
+        $.ajax({
+            type: 'post',
+            dataType: 'text',
+            url: /!*[[@{/testAjax}]]*!/,
+            data: {},
+            cache: false,
+            async: true,
+        });
+    });*/
+
+    /*]]>*/
+</script>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>我的展会公告管理页面</title>
+
+    <link rel="stylesheet" href="/asserts/css/bootstrap.min.css" />
+    <script src="/asserts/js/jquery-3.3.1.js"></script>
+    <script src="/asserts/js/bootstrap.min.js"></script>
+    <script src="/asserts/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+
+    <script type="text/javascript">
+            function updateDetail() {
+                alert("由于技术问题，功能暂时未完成，敬请期待");
+            }
+    </script>
+
+</head>
+<body>
+    <!--引入头部head.html-->
+    <div th:include="navbar :: head"></div>
+    <div class="container">
+        <div class="row">
+            <!--引入侧边功能按钮列表-->
+            <div th:include="myExhibition_left_button :: ex_left_button (activeUri='myEx')" class="col col-2" style="border: solid 1px;height: 800px;padding-top: 10px"></div>
+            <div id="list_demo" class="col col-10" style="border: solid 1px;height: 800px;padding-top: 10px">
+                <p class="text-center">管理公告</p><hr><br>
+                <p>展会：<span th:text="${exhibition.name}"></span></p>
+                <a class="btn btn-primary" th:href="@{/exhibition/toAddDetail/}+${exhibition.id} + '?name=' +${exhibition.name}">添加公告</a>
+                <table class="table-striped" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <td>公告id</td>
+                            <td>公告标题</td>
+                            <td>发布时间</td>
+                            <td>操作</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="note:${notes}">
+                            <td th:text="${note.id}"></td>
+                            <td th:text="${note.title}"></td>
+                            <td th:text="${#dates.format(note.createAt,'yyyy-MM-dd HH:mm:ss')}"></td>
+                            <td>
+                                <!--查看公告按钮-->
+                                <button type="button" class="btn btn-primary" data-toggle="modal" th:data-target="'#exampleModal' +${note.id}">
+                                    查看公告
+                                </button>
+                                <!-- 公告详情模态框 -->
+                                <div class="modal fade" th:id="exampleModal +${note.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-xl">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel" th:text="${note.id}">Modal title</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body" th:utext="${note.content}">
+                                                ...
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--修改公告按钮-->
+                                <a class="btn btn-primary" href="#" onclick="updateDetail()">修改公告</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>测试分页</title>
+    <link rel="stylesheet" href="/asserts/css/bootstrap.min.css" />
+    <script src="/asserts/js/jquery-3.3.1.js" type="text/javascript" th:src="@{/asserts/js/jquery-3.3.1.js}"></script>
+    <script src="/asserts/js/bootstrap.min.js"></script>
+    <script src="/asserts/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <form id="form1" class="form-inline my-2 my-lg-0" th:action="@{/page}" method="post">
+        <input class="form-control mr-sm-4" type="search" placeholder="漫展" th:value="${key == null?'漫展':key}" aria-label="Search" id="key" name="key">
+        <input id="page" type="hidden" name="page" value="1">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
+    </form>
+    <div>条数<span th:text="${data.total}"></span><hr><br>
+        页数<span th:text="${data.totalPage}"></span>
+    </div>
+    <div>
+        <ul class="list-unstyled">
+            <li th:each="item:${data.items}">
+                <div style="border: solid 1px blue">
+                    <input th:id="${item.id}" type="hidden" th:value="${item.id}">
+                    <img th:src="${item.img}" width="50px" height="50px">
+                    <a th:text="${item.name}"></a>
+                    <span th:text="${item.startAt}"></span>
+                    <span th:text="${item.endAt}"></span>
+                    <span th:text="${item.type}"></span>
+                    <span th:text="${item.address}"></span>
+                    <button>关注</button>
+                </div>
+            </li>
+        </ul>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li th:class="${curPage}==1?'page-item disabled':'page-item'">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true" th:onclick="sub([[${curPage}-1]])">Previous</a>
+                </li>
+                <!--显示3个结果-->
+                <li th:each=" i:${#numbers.sequence((curPage-1<=0)?1:(curPage==data.totalPage?curPage-2:curPage -1), (curPage+1)>=data.totalPage?data.totalPage:((curPage==1)?curPage+2:curPage+1))}" th:class="${curPage}==${i}?'page-item active':'page-item'"><a th:text="${i}"  class="page-link" href="#" th:onclick="sub([[${i}]])"></a></li>
+                <!--从1到结束-->
+                <!--<li th:each=" i:${#numbers.sequence(1, data.totalPage)}" th:class="${curPage}==${i}?'page-item active':'page-item'"><a th:text="${i}"  class="page-link" href="#" th:onclick="sub([[${i}]])"></a></li>-->
+                <li th:class="${curPage}==${data.totalPage}?'page-item disabled':'page-item'">
+                    <a class="page-link" href="#" th:onclick="sub([[${curPage}+1]])">Next</a>
+                </li>
+            </ul>
+        </nav>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    function sub(m) {
+        $("#page").val(m);
+        $("#form1").submit();
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

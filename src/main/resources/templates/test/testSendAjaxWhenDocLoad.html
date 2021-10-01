@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>主页</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script th:src="@{/asserts/js/jquery-3.3.1.js}" src="asserts/js/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/bootstrap.min.css}" />
+    <script th:src="@{/asserts/js/bootstrap.min.js}"></script>
+    <script type="text/javascript">
+        /*<![CDATA[*/
+        $(function () {
+            alert("你好");
+        })
+        /*]]>*/
+    </script>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        $(function () {
+            var id = $("#userId").val();
+            alert("标题");
+            var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+            var url = basePath+ "/user/query/" + id;
+            alert(url);
+            $.get(url,function (data) {
+                alert(data);
+            });
+        }
+        /*]]>*/
+    </script>
+</head>
+<body>
+    <div th:include="navbar :: head"></div>
+    <div>
+        <img id="img" src="#">
+        <button type="button" value="点击获取头像"></button>
+    </div>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>导航条页面 V1.0</title>
+
+    <link rel="stylesheet" href="/asserts/css/bootstrap.min.css" />
+
+</head>
+<body>
+<div th:fragment="head" id="navbar_box">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a class="navbar-brand" href="#" th:href="@{/}">ACG社区</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <!--主页-->
+                <li class="nav-item active">
+                    <a class="nav-link" href="#" th:href="@{/}">主页 <span class="sr-only">(current)</span></a>
+                </li>
+                <!--话题-->
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" href="#"  th:href="@{/topic}">话题</a>
+                </li>
+                <!--身份认证-->
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" href="#" th:href="@{/identity/queryByIdWithPage/}+${session.SPRING_SECURITY_CONTEXT.authentication.principal.id}">身份认证</a>
+                </li>
+                <!--合作-->
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" href="#" th:href="@{/cooperate/}">合作</a>
+                </li>
+                <!--管理展会-->
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" href="#" th:href="@{/exhibition/my/}+${session.SPRING_SECURITY_CONTEXT.authentication.principal.id}">我的展会</a>
+                </li>
+                <!--去测试页面-->
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" href="#" th:href="@{/test}">测试</a>
+                </li>
+            </ul>
+            <form id="queryExhibitionByPage" class="form-inline my-2 my-lg-0" th:action="@{/exhibition/page}" method="post" >
+                <input class="form-control mr-sm-4" type="search" placeholder="漫展" th:value="${key == null?'漫展':key}" aria-label="Search"  name="key">
+                <input  type="hidden" name="page" value="1">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
+            </form>
+            <ul class="navbar-nav mr-5 offset-4" sec:authorize="!isAuthenticated()">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/login}">登录</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/register}">注册</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav mr-5 offset-4" sec:authorize="isAuthenticated()">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/myInfo}"><span sec:authentication="name"></span></a>
+                    <!--<a class="nav-link" href="#" th:href="@{/user/query/} +${session.SPRING_SECURITY_CONTEXT.authentication.principal.id}" th:onclick="queryUser()"><span sec:authentication="name"></span></a>-->
+                    <!--用户ID-->
+                    <input type="hidden" id="userId" th:value="${session.SPRING_SECURITY_CONTEXT.authentication.principal.id}"/>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}" href="#" method="post">注销</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+</body>
+<!--<script type="text/javascript" th:inline="javascript">-->
+    <!--/*<![CDATA[*/-->
+    <!--//根据用户id查询用户信息  暂时弃用-->
+    <!--var userId = $("#userId").val();-->
+    <!--function queryUser() {-->
+        <!--$.get(/*[[@{/testAjax}]]*/)-->
+    <!--};-->
+    <!--//测试thymeleaf中的url如何书写-->
+    <!--function ajaxSubmit() {-->
+        <!--var name = $("#name").val();-->
+        <!--console.log(name);-->
+        <!--$.post(/*[[@{/testAjax}]]*/,{name : name},function (data) {-->
+            <!--alert(data);-->
+            <!--$("#user").html(data.usernname);-->
+        <!--});-->
+    <!--};-->
+    <!--//搜索展会-->
+    <!--function search() {-->
+        <!--var key = $("#key").val;-->
+        <!--alert(key);-->
+        <!--$.get(/*[[@{/exhibition/page}]]*/,function(data){-->
+            <!--alert(data);-->
+        <!--})-->
+    <!--}-->
+    <!--/*]]>*/-->
+<!--</script>-->
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>身份认证页面侧边栏</title>
+
+    <link rel="stylesheet" th:href="@{/asserts/css/bootstrap.min.css}" />
+    <script th:src="@{/asserts/js/jquery-3.3.1.js}" src="asserts/js/jquery-3.3.1.js"></script>
+    <script th:src="@{/asserts/js/bootstrap.min.js}"></script>
+    <script th:src="@{/asserts/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+
+</head>
+<body>
+<div th:fragment="identity_left_button" id="user_list">
+    <div class="btn-group-vertical" role="group">
+        <ul class="list-unstyled">
+            <li><a th:href="@{/identity/queryByIdWithPage/}+${session.SPRING_SECURITY_CONTEXT.authentication.principal.id}" th:class="${activeUri== 'myIdentity'?'btn btn-primary active':'btn btn-primary'}">我的身份</a></li>
+            <li><a th:href="@{/identity/identityApply}" th:class="${activeUri== 'identity_apply'?'btn btn-primary active':'btn btn-primary'}">申请认证</a></li>
+            <li><a th:href="@{/identity/applyStatus/}+${session.SPRING_SECURITY_CONTEXT.authentication.principal.id}"  th:class="${activeUri== 'identity_access'?'btn btn-primary active':'btn btn-primary'}">审核进度</a></li>
+            <li><a th:href="@{/identity/apply/query}"  th:class="${activeUri== 'identity_reply'?'btn btn-primary active':'btn btn-primary'}">处理审核</a></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

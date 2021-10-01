@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心侧边栏</title>
+
+    <link rel="stylesheet" th:href="@{/asserts/css/bootstrap.min.css}" />
+    <script th:src="@{/asserts/js/jquery-3.3.1.js}" src="asserts/js/jquery-3.3.1.js"></script>
+    <script th:src="@{/asserts/js/bootstrap.min.js}"></script>
+    <script th:src="@{/asserts/js/bootstrap.bundle.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+
+</head>
+<body>
+<div th:fragment="user_left_button" id="user_list">
+    <div class="btn-group-vertical" role="group">
+        <ul class="list-unstyled">
+            <li><a th:href="@{/myInfo}" th:class="${activeUri== 'myinfo'?'btn btn-primary active':'btn btn-primary'}">基本信息</a></li>
+            <li><a th:href="@{/updatePwd}"  th:class="${activeUri== 'updatePwd'?'btn btn-primary active':'btn btn-primary'}">修改密码</a></li>
+            <li><a th:href="@{/changeImg}" th:class="${activeUri== 'updateImg'?'btn btn-primary active':'btn btn-primary'}">更换头像</a></li>
+            <li><a th:href="@{/user/followers?userId=}+${session .SPRING_SECURITY_CONTEXT.authentication.principal.id}" th:class="${activeUri== 'myFollower'?'btn btn-primary active':'btn btn-primary'}">我的关注</a></li>
+            <li><a th:href="@{/user/followeds?userId=}+${session .SPRING_SECURITY_CONTEXT.authentication.principal.id}" th:class="${activeUri== 'myFollowed'?'btn btn-primary active':'btn btn-primary'}">我的粉丝</a></li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

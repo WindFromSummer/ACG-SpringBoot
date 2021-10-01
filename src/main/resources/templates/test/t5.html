@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>话题发布</title>
+    <style>
+        .btn {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div th:include="navbar :: head"></div>
+    <br>
+    <div class="container col-6">
+        <h2 align="center">发布话题</h2>
+    </div>
+    <hr><br>
+    <div class="container col-6">
+        <div th:width="400px">
+            <form class="form-horizontal" th:action="@{/user/register}" method="post">
+                <div class="form-group">
+                    话题名称:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    <input type="text" id="username_msg" placeholder="">
+                </div>
+                <hr>
+                <div class="form-group">
+                    话题类型:&nbsp&nbsp&nbsp&nbsp&nbsp
+                    <input type="text"  placeholder="">
+                </div>
+                <hr><br>
+                <button type="submit" class="btn btn-primary" >发布</button>
+            </form>
+        </div>
+    </div>
+
+    <br><br><br><br><br><br><br>
+    <form th:action="@{/upload/image}" method="post" enctype="multipart/form-data">
+        <input type="file" class="file1" name="file" />
+        <button type="submit" >上传</button>
+    </form>
+</body>
+</html>

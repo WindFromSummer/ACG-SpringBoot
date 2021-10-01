@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>修改头像页面</title>
+
+    <link rel="stylesheet" href="/asserts/css/bootstrap.min.css"/>
+    <script src="/asserts/js/jquery-3.3.1.js"></script>
+    <script src="/asserts/js/bootstrap.min.js"></script>
+    <script src="/asserts/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+
+    <script type="text/javascript">
+        $(function () {
+            loadUUserInfo();
+        })
+    </script>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        function loadUUserInfo() {
+            var id = $("#userId").val();
+            var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+            var url = basePath+ "/user/query/" + id;
+            $.get(url,function (data) {
+                $("#user_img").attr('src',data.image);
+                $("#username").attr('placeholder',data.username);
+                $("#phone").attr('placeholder',data.phone);
+                $("#gender").attr('placeholder',data.gender);
+            });
+        }
+        /*]]>*/
+    </script>
+</head>
+<body>
+    <!--引入头部head.html-->
+    <div th:include="navbar :: head"></div>
+    <div class="container">
+        <div class="row">
+            <!--引入侧边功能按钮列表-->
+            <div th:include="user_left_button :: user_left_button (activeUri='updateImg')" class="col col-2" style="border: solid 1px;height: 800px;padding-top: 10px"></div>
+            <div id="list_demo" class="col col-10" style="border: solid 1px;height: 800px;padding-top: 10px">
+                <h3 class="text-center">上传头像</h3><hr><br>
+                当前头像: <img id="user_img"  width="200px" height="200px" class="img-circle"><hr><br>
+                <form th:action="@{/user/uploadImg}" method="post" enctype="multipart/form-data">
+                    <input id="userId" type="hidden" name="userId" th:value="${session.SPRING_SECURITY_CONTEXT.authentication.principal.id}"/>
+                    选择头像<input type="file" name="file">
+                    <hr>
+                    <button type="submit">提交</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

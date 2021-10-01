@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>我的粉丝页面</title>
+
+    <link rel="stylesheet" href="/asserts/css/bootstrap.min.css" />
+    <script src="/asserts/js/jquery-3.3.1.js"></script>
+    <script src="/asserts/js/bootstrap.min.js"></script>
+    <script src="/asserts/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+
+    <script type="text/javascript">
+        $(function () {
+            // loadFollowed();
+        })
+    </script>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        function loadFollowed() {
+            var id = $("#userId").val();
+            id = Number(id);
+            var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+            var url = basePath+ "/user/followeds?userId=" + id;
+            $.get(url,function (data) {
+                $("#none_followed").remove();
+                var lis = '';
+                //遍历数组
+                for (var i = 0; i < data.length; i++) {
+                    var li = '<li><div style="border: solid 1px blue">' +
+                        '<img src="'+ data[i].image +'" width="50px" height="50px">' +
+                        '<span>'+ data[i].username +'</span>' +
+                        '<button>关注</button>' +
+                        '</div></li>';
+                    lis += li;
+                };
+                //将lis添加到ul的html中
+                $("#followed_list").html(lis);
+            });
+        }
+        /*]]>*/
+    </script>
+
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        function star(userId,targetId) {
+            $.post(/*[[@{/user/star}]]*/,
+                {
+                    userId : userId,
+                    followerUser :targetId
+                },
+                function (data) {
+                    alert("关注成功");
+                    $("#btn"+targetId+"").text("已互粉");
+                }
+            );
+        }
+        /*]]>*/
+    </script>
+
+</head>
+<body>
+    <!--引入头部head.html-->
+    <div th:include="navbar :: head"></div>
+    <div class="container">
+        <div class="row">
+            <!--引入侧边功能按钮列表-->
+            <div th:include="user_left_button :: user_left_button(activeUri='myFollowed')" class="col col-2" style="border: solid 1px;height: 800px;padding-top: 10px"></div>
+            <div id="list_demo" class="col col-10" style="border: solid 1px;height: 800px;padding-top: 10px">
+                <h3 class="text-center">我的粉丝</h3><span>共[[${data.total}]]人</span><hr><br>
+                <div id="none_followed" th:if="${data.total}==0">
+                    <p style="text-align: center">您还没有粉丝哦。</p>
+                </div>
+                <!--粉丝列表-->
+                <div class="card mb-12" style="max-width: 100%;background-color: rgba(243,244,248,0.94)" th:each="item:${data.items}">
+                    <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <img th:src="${item.image}" height="150px" width="auto" class="card-img" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                                <p class="card-text" th:text="${item.username}"></p>
+                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                <!--<button th:id="btn+ ${item.id}" th:onclick="star([[${session.SPRING_SECURITY_CONTEXT.authentication.principal.id}]],[[${item.id}]])">关注</button>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <nav aria-label="Page navigation example" th:if="${data.total}>5">
+                    <ul class="pagination justify-content-center">
+                        <!--前一页-->
+                        <li th:class="${curPage}==1?'page-item disabled':'page-item'">
+                            <a class="page-link" th:href="@{/user/followeds?userId=}+${session .SPRING_SECURITY_CONTEXT.authentication.principal.id} + '&page=' + (${curPage}-1)" tabindex="-1" aria-disabled="true">上一页</a>
+                        </li>
+                        <!--顺序页码-->
+                        <li th:each=" i:${#numbers.sequence((curPage<=1)?1:(curPage -1), (curPage+1)>=data.totalPage?data.totalPage:((curPage==1)?curPage+2:curPage+1))}" th:class="${curPage}==${i}?'page-item active':'page-item'"><a th:text="${i}"  class="page-link" th:href="@{/user/followeds?userId=}+${session .SPRING_SECURITY_CONTEXT.authentication.principal.id} + '&page=' +${i}"></a></li>
+                        <!--后一页-->
+                        <li th:class="${curPage}==${data.totalPage}?'page-item disabled':'page-item'">
+                            <a class="page-link" th:href="@{/user/followeds?userId=}+${session .SPRING_SECURITY_CONTEXT.authentication.principal.id} + '&page=' + (${curPage}+1)">下一页</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

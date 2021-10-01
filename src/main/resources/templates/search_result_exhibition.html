@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>搜索-展会结果页面</title>
+
+    <link rel="stylesheet" href="/asserts/css/bootstrap.min.css"/>
+    <script src="asserts/js/jquery-3.3.1.js" type="text/javascript" th:src="@{/asserts/js/jquery-3.3.1.js}"></script>
+    <script src="/asserts/js/bootstrap.min.js"></script>
+    <script src="/asserts/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/asserts/css/common.css}">
+
+    <!--搜索界面隐藏导航栏中的搜索框-->
+    <script type="text/javascript">
+        $(function () {
+            $("#queryExhibitionByPage").hide();
+        })
+    </script>
+
+    <!--<script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        function loadSearch() {
+            $("#user_list").hide();
+            $("#ex_list").show();
+            $("#none_result").show();
+            var key = $("#key").val();
+            var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+            var url = basePath+ "/exhibition/page?key=" + key;
+            $.get(url,function (data) {
+                $("#none_result").hide();
+                var lis = '';
+                //遍历数组
+                for (var i = 0; i < data.items.length; i++) {
+                    var link = basePath + "/exhibition/details/" + data.items[i].id;
+                    var li = '<li><div style="border: solid 1px blue">' +
+                        '<input id="'+ data.items[i].id +'" type="hidden">' +
+                        '<img src="'+ data.items[i].img +'" width="50px" height="50px">' +
+                        '<a href="'+ link + '">'+ data.items[i].name +'</a>' +
+                        '<span>'+ data.items[i].startAt +'</span>' +
+                        '<span>'+ data.items[i].endAt +'</span>' +
+                        '<span>'+ data.items[i].type +'</span>' +
+                        '<span>'+ data.items[i].address +'</span>' +
+                        '<button id="submit" onclick="submit()">关注</button>' +
+                        '</div></li>';
+                    lis += li;
+                };
+                //将lis添加到ul的html中
+                $("#ex_list").html(lis);
+            });
+        }
+        /*]]>*/
+    </script>-->
+    <!--跳转详情页-->
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        function to_details(id) {
+            var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+            var url = basePath+ "/exhibition/details/" + id;
+            $.get(url,function () {
+
+            });
+        }
+        /*]]>*/
+    </script>
+</head>
+<body>
+<!--引入头部head.html-->
+<div th:include="navbar :: head"></div>
+<br><br><br>
+<div class="container">
+    <div th:include="search_list :: search_list (activeUri='ex')" style="padding-bottom: 10px"></div>
+    <div class="row" style="margin-bottom: 10px">
+        <div id="list_demo" class="col" style="border: solid 1px ">
+            <div id="none_followed" th:if="${data.total}==0">
+                <p style="text-align: center">未查询到符合条件的展会信息。</p>
+            </div>
+            <!--展会结果列表-->
+            <ul class="list-unstyled" id="ex_list">
+                <li th:each="item:${data.items}">
+                    <div class="row no-gutters" style="border: solid 1px blue;background-color: rgba(243,244,248,0.94)">
+                        <div class="col-md-4">
+                            <img th:src="${item.img}" height="280px"  class="card-img" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title"><a th:text="${item.name}" th:href="@{/exhibition/details/} + ${item.id}"></a></h5>
+                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                <p>
+                                    举办时间：<span th:text="${#dates.format(item.startAt,'yyyy-MM-dd HH:mm:ss')}"></span>-<span th:text="${#dates.format(item.endAt,'yyyy-MM-dd HH:mm:ss')}"></span>
+                                </p>
+                               <p> 展会类型：<span th:text="${item.type}==1?'漫展':(exhibition.type==2?'科技展':'游戏展')"></span></p>
+                                <p>举办地址：<span th:text="${item.address}"></span></p>
+                                <p>关注人数：<span th:text="${item.forkNum}"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div style="border: solid 1px blue;background-color: rgba(243,244,248,0.94)">
+                        <input th:id="${item.id}" type="hidden" th:value="${item.id}">
+                        <img th:src="${item.img}" width="50px" height="50px">
+                        <a th:text="${item.name}" th:href="@{/exhibition/details/} + ${item.id}"></a>
+                        <span th:text="${#dates.format(item.startAt,'yyyy-MM-dd HH:mm:ss')}"></span>
+                        <span th:text="${#dates.format(item.endAt,'yyyy-MM-dd HH:mm:ss')}"></span>
+                        <span th:text="${item.type}"></span>
+                        <span th:text="${item.address}"></span>
+                        <button>关注</button>
+                    </div>-->
+                </li>
+            </ul>
+            <ul class="list-unstyled" id="user_list"></ul>
+            <!--分页条-->
+            <nav aria-label="Page navigation example" th:if="${data.total}>5">
+                <ul class="pagination justify-content-center">
+                    <li th:class="${curPage}==1?'page-item disabled':'page-item'">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true" th:onclick="search_exhibition([[${curPage}-1]])">上一页</a>
+                    </li>
+                    <!--显示3个结果-->
+                    <li th:each=" i:${#numbers.sequence((curPage-1<=1)?1:(curPage==data.totalPage?curPage-2:curPage -1), (curPage+1)>=data.totalPage?data.totalPage:((curPage==1)?curPage+2:curPage+1))}" th:class="${curPage}==${i}?'page-item active':'page-item'"><a th:text="${i}"  class="page-link" href="#" th:onclick="search_exhibition([[${i}]])"></a></li>
+                    <!--从1到结束-->
+                    <!--<li th:each=" i:${#numbers.sequence(1, data.totalPage)}" th:class="${curPage}==${i}?'page-item active':'page-item'"><a th:text="${i}"  class="page-link" href="#" th:onclick="sub([[${i}]])"></a></li>-->
+                    <li th:class="${curPage}==${data.totalPage}?'page-item disabled':'page-item'">
+                        <a class="page-link" href="#" th:onclick="search_exhibition([[${curPage}+1]])">下一页</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+</body>
+</html>
