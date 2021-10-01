@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!--
+        context：代码生成规则配置的上下文
+            id:标识
+            targetRuntime: MyBatis3Simple 只会生成基本的CRUD操作
+
+    -->
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+
+        <!--commentGenerator：注释生成策略-->
+        <commentGenerator>
+            <!--suppressAllComments:是否阻止注释生成-->
+            <property name="suppressAllComments" value="true"/>
+            <!--suppressDate:是否阻止时间戳生成-->
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+        <!--jdbcConnection：数据库的链接属性-->
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://120.27.212.247:3306/ACG?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT%2B8"
+                        userId="root"
+                        password="root">
+            <!--解决mysql驱动升级到8.0后不生成指定数据库代码的问题-->
+            <property name="nullCatalogMeansCurrent" value="true" />
+        </jdbcConnection>
+
+        <!--javaTypeResolver：java类型转换策略-->
+        <javaTypeResolver >
+            <!-- forceBigDecimals
+                 false:如果数据库中的字段类型为numeric或者decimal，在代码生成的时候根据数据库中设定的长度自动选择java类型进行转换
+                 true:直接使用java.math.BigDecimal类型-->
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <!--domain生成策略；targetPackage：生成到哪个包下面，targetProject：生成到哪个项目目录下面-->
+        <javaModelGenerator targetPackage="zc.free.acg.model" targetProject="C:\Users\86159\IdeaProjects\ACG-community-SpringBoot\src\main\java">
+            <!--<property name="enableSubPackages" value="true" />-->
+            <!--表示是否修剪字符串（去掉空格-->
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <!--sqlMapGenerator：映射文件生成策略
+               targetPackage:生成到哪个包下面，targetProject：生成到哪个项目目录下面
+        -->
+        <sqlMapGenerator targetPackage="config.mybatis.mapper"  targetProject="C:\Users\86159\IdeaProjects\ACG-community-SpringBoot\src\main\resources">
+            <property name="enableSubPackages" value="false" />
+        </sqlMapGenerator>
+
+        <!--mapper接口生成策略
+           type:ANNOTATEDMAPPER:注解的形式
+                XMLMAPPER：xml映射的形式-->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="zc.free.acg.mapper"  targetProject="C:\Users\86159\IdeaProjects\ACG-community-SpringBoot\src\main\java">
+            <property name="enableSubPackages" value="false" />
+        </javaClientGenerator>
+
+        <!--指定要生成代码的表
+                domainObjectName：设置表对应的domain实体类生成的名称
+        -->
+        <!--用户表-->
+        <!--<table tableName="user"></table>-->
+        <!--权限表-->
+        <!--<table tableName="access"></table>-->
+        <!--权限表-->
+        <!--<table tableName="comic_img"></table>-->
+        <!--权限表-->
+        <!--<table tableName="cooperate"></table>-->
+        <table tableName="ex_user_msg"></table>
+        <table tableName="exhibition"></table>
+
+
+        <table tableName="exhibition_details"></table>
+        <table tableName="identity"></table>
+        <table tableName="role"></table>
+        <table tableName="role_access"></table>
+        <table tableName="ticket"></table>
+        <table tableName="topic"></table>
+        <table tableName="topic_msg"></table>
+        <table tableName="user_ex_follow"></table>
+        <table tableName="user_followed"></table>
+        <table tableName="user_follower"></table>
+        <table tableName="user_identity"></table>
+        <table tableName="user_identity_apply"></table>
+        <table tableName="user_msg"></table>
+        <table tableName="user_role"></table>
+
+
+
+
+
+    </context>
+</generatorConfiguration>
