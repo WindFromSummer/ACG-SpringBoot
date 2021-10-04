@@ -12,22 +12,18 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import tk.mybatis.mapper.entity.Example;
 import zc.free.acg.config.PwdSmsProperties;
 import zc.free.acg.config.SmsProperties;
 import zc.free.acg.domain.PageResult;
-import zc.free.acg.domain.User;
-import zc.free.acg.domain.UserFollowed;
-import zc.free.acg.domain.UserFollower;
+import zc.free.acg.mapper.UserExFollowMapper;
 import zc.free.acg.mapper.UserFollowedMapper;
 import zc.free.acg.mapper.UserFollowerMapper;
 import zc.free.acg.mapper.UserMapper;
-import zc.free.acg.model.UserExample;
+import zc.free.acg.mapper.extend.UserExtendMapper;
+import zc.free.acg.model.*;
 import zc.free.acg.service.UploadService;
 import zc.free.acg.service.UserService;
-import zc.free.acg.util.CodecUtils;
-import zc.free.acg.util.NumberUtils;
-import zc.free.acg.util.SmsUtils;
+import zc.free.acg.util.*;
 
 import java.util.Date;
 import java.util.List;
@@ -50,6 +46,10 @@ public class UserServiceImpl implements UserService {
     private SmsUtils smsUtils;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserExtendMapper userExtendMapper;
+    @Autowired
+    private UserExFollowMapper userExFollowMapper;
     @Autowired
     private UserFollowerMapper userFollowerMapper;
     @Autowired
@@ -118,7 +118,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void register(User user, String code) {
-        zc.free.acg.model.User userDao = new zc.free.acg.model.User();
         log.info("注册功能请求参数：User-" + user);
         log.info("注册功能请求参数：用户输入验证码-" + code);
 
@@ -141,7 +140,7 @@ public class UserServiceImpl implements UserService {
         user.setCreated(new Date());
 
 
-        this.userMapper.insertSelective(userDao);
+        this.userMapper.insertSelective(user);
     }
 
     @Override
@@ -157,17 +156,20 @@ public class UserServiceImpl implements UserService {
         //对密码加密
         user.setPassword(CodecUtils.BCryptPasswordEncoder(user.getPassword()));
         //初始化example对象
-        Example example = new Example(User.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("phone", user.getPhone());
+        UserExample userExample = new UserExample();
+        UserExample.Criteria criteria = userExample.createCriteria();
+        criteria.andPhoneEqualTo(user.getPassword());
         // 修改密码
-        this.userMapper.updateByExampleSelective(user, example);
+        this.userMapper.updateByExampleSelective(user, userExample);
 
     }
 
     @Override
     public Boolean queryUserIsForkExhibition(Integer id, Integer exId) {
-        int count = this.userMapper.selectUserIsForkExhibition(id,exId);
+        UserExFollowExample userExFollowExample = new UserExFollowExample();
+        UserExFollowExample.Criteria criteria = userExFollowExample.createCriteria();
+        criteria.andUserIdEqualTo(id);
+        long count = this.userExFollowMapper.countByExample(userExFollowExample);
         if (count == 0) {
             return false;
         } else if (count == 1) {
@@ -179,24 +181,33 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void ForkExhibition(Integer id, Integer exId) {
-        this.userMapper.ForkExhibition(id,exId);
+        UserExFollow userExFollow = new UserExFollow();
+        // TODO  考虑数据库表的自增id如何实现
+//        userExFollow.setId();
+        userExFollow.setUserId(id);
+        userExFollow.setExId(exId);
+        this.userExFollowMapper.insertSelective(userExFollow);
     }
 
     @Override
     public User queryUser(String username, String password) {
-        User record = new User();
-        record.setUsername(username);
-        User user = this.userMapper.selectOne(record);
-        //判断用户是否为空
-        if (user == null) {
+        UserExample userExample = new UserExample();
+        UserExample.Criteria criteria = userExample.createCriteria();
+        criteria.andUsernameEqualTo(username);
+        List<User> users = this.userMapper.selectByExample(userExample);
+        // 判断用户是否为空
+        if (Util.isNullOrEmpty(users)) {
             return null;
         }
-        //读取salt 对用户输入的密码加盐加密
-        password = CodecUtils.md5Hex(password, user.getSalt());
-        //对密码进行判断
 
-        if (StringUtils.equals(password, user.getPassword())) {
-            return user;
+        if (users.size() == 1) {
+            User user = users.get(0);
+            //读取salt 对用户输入的密码加盐加密
+            password = CodecUtils.md5Hex(password, user.getSalt());
+            //对密码进行判断
+            if (StringUtils.equals(password, user.getPassword())) {
+                return user;
+            }
         }
         return null;
     }
@@ -216,8 +227,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void starUser(UserFollower userFollower) {
-        List<UserFollower> select = this.userFollowerMapper.select(userFollower);
-        if (select == null || select.size() == 0) {
+        UserFollowerExample userFollowerExample = new UserFollowerExample();
+        UserFollowerExample.Criteria criteria = userFollowerExample.createCriteria();
+        criteria.andUserIdEqualTo(userFollower.getUserId()).andFollowerUserEqualTo(userFollower.getFollowerUser());
+        List<UserFollower> userFollowers = this.userFollowerMapper.selectByExample(userFollowerExample);
+        if (Util.isNullOrEmpty(userFollowers)) {
             this.userFollowerMapper.insertSelective(userFollower);
             UserFollowed record = new UserFollowed();
             record.setUserId(userFollower.getFollowerUser());
@@ -225,21 +239,21 @@ public class UserServiceImpl implements UserService {
             this.userFollowedMapper.insertSelective(record);
         } else {
             //更新关注表
-            Example example = new Example(UserFollower.class);
-            Example.Criteria criteria = example.createCriteria();
-            criteria.andEqualTo("userId", userFollower.getUserId());
-            criteria.andEqualTo("followerUser", userFollower.getFollowerUser());
+            UserFollowerExample.Criteria criteria1 = userFollowerExample.createCriteria();
+            criteria1.andUserIdEqualTo(userFollower.getUserId());
+            criteria1.andFollowerUserEqualTo(userFollower.getFollowerUser());
             UserFollower record = new UserFollower();
-            userFollower.setStatus(1);
-            this.userFollowerMapper.updateByExampleSelective(userFollower,example);
+            byte i = 1;
+            userFollower.setStatus(i);
+            this.userFollowerMapper.updateByExampleSelective(record,userFollowerExample);
             //更新粉丝表
-            example = new Example(UserFollowed.class);
-            criteria = example.createCriteria();
-            criteria.andEqualTo("userId", userFollower.getFollowerUser());
-            criteria.andEqualTo("followedUser", userFollower.getUserId());
+            UserFollowedExample userFollowedExample = new UserFollowedExample();
+            UserFollowedExample.Criteria userFollowedExampleCriteria = userFollowedExample.createCriteria();
+            userFollowedExampleCriteria.andUserIdEqualTo(userFollower.getFollowerUser());
+            userFollowedExampleCriteria.andFollowedUserEqualTo(userFollower.getUserId());
             UserFollowed userFollowed = new UserFollowed();
-            userFollowed.setStatus(1);
-            this.userFollowedMapper.updateByExampleSelective(userFollowed,example);
+            userFollowed.setStatus(i);
+            this.userFollowedMapper.updateByExampleSelective(userFollowed,userFollowedExample);
         }
 
     }
@@ -248,52 +262,66 @@ public class UserServiceImpl implements UserService {
     @Override
     public void cancelStarUser(Integer id, Integer targetUser) {
         //更新关注表
-        Example example = new Example(UserFollower.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("userId", id);
-        criteria.andEqualTo("followerUser", targetUser);
+        UserFollowerExample userFollowerExample = new UserFollowerExample();
+        UserFollowerExample.Criteria userFollowerExampleCriteria = userFollowerExample.createCriteria();
+        userFollowerExampleCriteria.andUserIdEqualTo(id);
+        userFollowerExampleCriteria.andFollowerUserEqualTo(targetUser);
         UserFollower userFollower = new UserFollower();
-        userFollower.setStatus(0);
-        this.userFollowerMapper.updateByExampleSelective(userFollower,example);
+        byte status = 0;
+        userFollower.setStatus(status);
+        this.userFollowerMapper.updateByExampleSelective(userFollower,userFollowerExample);
         //更新粉丝表
-        example = new Example(UserFollowed.class);
-        criteria = example.createCriteria();
-        criteria.andEqualTo("userId", targetUser);
-        criteria.andEqualTo("followedUser", id);
+        UserFollowedExample userFollowedExample = new UserFollowedExample();
+        UserFollowedExample.Criteria userFollowedExampleCriteria = userFollowedExample.createCriteria();
+        userFollowedExampleCriteria.andUserIdEqualTo(targetUser);
+        userFollowedExampleCriteria.andFollowedUserEqualTo(id);
         UserFollowed userFollowed = new UserFollowed();
-        userFollowed.setStatus(0);
-        this.userFollowedMapper.updateByExampleSelective(userFollowed,example);
+        userFollowed.setStatus(status);
+        this.userFollowedMapper.updateByExampleSelective(userFollowed,userFollowedExample);
     }
 
 
     @Override
     public Integer queryFollowerCount(Integer userId) {
         //初始化example对象
-        Example example = new Example(UserFollower.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("userId", userId);
+        UserFollowerExample userFollowerExample = new UserFollowerExample();
+        UserFollowerExample.Criteria userFollowerExampleCriteria = userFollowerExample.createCriteria();
+        userFollowerExampleCriteria.andUserIdEqualTo(userId);
         //根据userId查询数量 或者根据首字母查询
-        return this.userFollowerMapper.selectCountByExample(example);
+        return (int)this.userFollowerMapper.countByExample(userFollowerExample);
     }
 
     @Override
     public List<User> queryFollowers(Integer userId) {
-        return this.userMapper.findFollowerUsersById(userId);
+        UserFollowerExample userFollowerExample = new UserFollowerExample();
+        UserFollowerExample.Criteria userFollowerExampleCriteria = userFollowerExample.createCriteria();
+        userFollowerExampleCriteria.andUserIdEqualTo(userId);
+        //根据userId查询数量 或者根据首字母查询
+        List<UserFollower> userFollowers = this.userFollowerMapper.selectByExample(userFollowerExample);
+
+        return BeanUtils.listbean2ListBean(userFollowers, User.class);
     }
 
     @Override
     public Integer queryFollowedCount(Integer userId) {
         //初始化example对象
-        Example example = new Example(UserFollowed.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("userId", userId);
+        UserFollowedExample example = new UserFollowedExample();
+        UserFollowedExample.Criteria criteria = example.createCriteria();
+
+        criteria.andUserIdEqualTo(userId);
         //根据userId查询数量 或者根据首字母查询
-        return this.userFollowedMapper.selectCountByExample(example);
+        return (int)this.userFollowedMapper.countByExample(example);
     }
 
     @Override
     public List<User> queryFolloweds(Integer userId) {
-        return this.userMapper.findFollowedUsersById(userId);
+        UserFollowedExample example = new UserFollowedExample();
+        UserFollowedExample.Criteria criteria = example.createCriteria();
+
+        criteria.andUserIdEqualTo(userId);
+        //根据userId查询数量 或者根据首字母查询
+        List<UserFollowed> userFolloweds = this.userFollowedMapper.selectByExample(example);
+        return BeanUtils.listbean2ListBean(userFolloweds, User.class);
     }
 
     @Override
@@ -301,9 +329,13 @@ public class UserServiceImpl implements UserService {
         //添加分页条件
         PageHelper.startPage(page,cows);
         // 查询结果
-        List<User> userFollowers = this.userMapper.findFollowedUsersById(userId);
+        UserFollowedExample userFollowedExample = new UserFollowedExample();
+        UserFollowedExample.Criteria criteria = userFollowedExample.createCriteria();
+        criteria.andUserIdEqualTo(userId);
+        List<UserFollowed> userFolloweds = this.userFollowedMapper.selectByExample(userFollowedExample);
+        List<User> users = BeanUtils.listbean2ListBean(userFolloweds, User.class);
         //包装成pageinfo
-        PageInfo<User> pageInfo = new PageInfo<>(userFollowers);
+        PageInfo<User> pageInfo = new PageInfo<>(users);
         //包装成分页结果
         long total = pageInfo.getTotal();
         //总记录页数
@@ -320,12 +352,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public PageResult<User> queryUserByKey(String key, Integer page, Integer cows) {
         //初始化example对象
-        Example example = new Example(User.class);
-        Example.Criteria criteria = example.createCriteria();
+        UserExample example = new UserExample();
+        UserExample.Criteria criteria = example.createCriteria();
 
         //根据name模糊查询
         if(StringUtils.isNotBlank(key)) {
-            criteria.andLike("username", "%"+key +"%");
+            criteria.andUsernameLike("%"+key +"%");
         }
 
         //添加分页条件
@@ -370,9 +402,13 @@ public class UserServiceImpl implements UserService {
         //添加分页条件
         PageHelper.startPage(page,cows);
         // 查询结果
-        List<User> userFollowers = this.userMapper.findFollowerUsersById(userId);
+        UserFollowerExample userFollowerExample = new UserFollowerExample();
+        UserFollowerExample.Criteria criteria = userFollowerExample.createCriteria();
+        criteria.andUserIdEqualTo(userId);
+        List<UserFollower> userFollowers1 = this.userFollowerMapper.selectByExample(userFollowerExample);
+        List<User> users = BeanUtils.listbean2ListBean(userFollowers1, User.class);
         //包装成pageinfo
-        PageInfo<User> pageInfo = new PageInfo<>(userFollowers);
+        PageInfo<User> pageInfo = new PageInfo<>(users);
         //包装成分页结果
         long total = pageInfo.getTotal();
         //总记录页数
@@ -386,9 +422,5 @@ public class UserServiceImpl implements UserService {
         return new PageResult<>(pageInfo.getTotal(),totalPage ,pageInfo.getList());
     }
 
-    public static void main(String[] args) {
-        long i = 1;
-        System.out.println(i == 1);
-    }
 
 }

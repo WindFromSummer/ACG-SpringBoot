@@ -3,8 +3,8 @@ package zc.free.acg.service;
 import com.aliyuncs.exceptions.ClientException;
 import org.springframework.web.multipart.MultipartFile;
 import zc.free.acg.domain.PageResult;
-import zc.free.acg.domain.User;
-import zc.free.acg.domain.UserFollower;
+import zc.free.acg.model.User;
+import zc.free.acg.model.UserFollower;
 
 import java.util.List;
 
