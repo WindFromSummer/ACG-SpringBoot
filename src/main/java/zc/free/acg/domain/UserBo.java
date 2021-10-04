@@ -1,8 +1,6 @@
 package zc.free.acg.domain;
 
-import org.springframework.security.core.GrantedAuthority;
-
-import java.util.Collection;
+import zc.free.acg.model.User;
 
 /**
  * @auther ZhengCong

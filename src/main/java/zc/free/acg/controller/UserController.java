@@ -5,24 +5,17 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import zc.free.acg.domain.PageResult;
-import zc.free.acg.domain.User;
-import zc.free.acg.domain.UserFollower;
+import zc.free.acg.model.UserFollower;
+import zc.free.acg.model.User;
 import zc.free.acg.service.UserService;
-import zc.free.acg.service.auth.WgcUserDetails;
-
-import java.util.List;
 
 /**
  * @auther ZhengCong
