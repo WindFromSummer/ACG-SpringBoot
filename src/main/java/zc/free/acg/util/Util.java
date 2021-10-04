@@ -1,19 +1,5 @@
 package zc.free.acg.util;
 
-import com.csii.pe.common.security.MsXMLElement;
-import com.csii.pe.common.util.Base64;
-import com.csii.pe.common.util.CsiiUtils;
-import com.csii.pe.common.util.regex.PatternPool;
-import com.csii.pe.core.PeRuntimeException;
-import com.csii.pe.validation.RemoteRejectRuntimeException;
-import com.csii.pe.validation.ValidationException;
-import com.csii.pe.validation.ValidationRuntimeException;
-import com.csii.pisces.domain.datamodel.CommonResponse;
-import com.csii.pisces.domain.datamodel.CommonResponseHead;
-import com.csii.pisces.domain.datamodel.PasswordPolicy;
-import com.csii.pisces.domain.datamodel.error.CHECKMSG;
-import com.csii.pisces.domain.enums.PasswordOption;
-import com.csii.pisces.domain.enums.TokenType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
@@ -247,7 +233,7 @@ public class Util {
      * （密码控制策略选项|最低长度｜最大长度｜密码构成规则｜首次登录是否修改｜有效日期｜允许失败次数|是否支持密码复杂度|发送短信|密码频繁错误次数|间隔时间（S））
      * 规则ID=模块渠道+密码类型+Passowrd
      * F|6|20|C|Y|0D|20|0|0|6|3600
-     */
+     *//*
     public static void resolvePasswordPolicyRule(String ruleDef, PasswordPolicy passwordPolicy) {
         String[] policy = StringUtils.tokenizeToStringArray(ruleDef, "|");
         if (policy.length != 11) {
@@ -269,7 +255,7 @@ public class Util {
         passwordPolicy.setLockCount(Integer.parseInt(policy[9]));
         passwordPolicy.setLockTime(Integer.parseInt(policy[10]));
 
-    }
+    }*/
 
     public static boolean isBoolean(String s) {
         if (("Y").equals(s) || (("Yes").equals(s))) {
@@ -278,13 +264,13 @@ public class Util {
         return false;
     }
 
-    public static boolean resovleUsbKeyFlag(TokenType certType) {
+    /*public static boolean resovleUsbKeyFlag(TokenType certType) {
         if (TokenType.UC == certType) {
             return true;
         } else {
             return false;
         }
-    }
+    }*/
 
     public static int resovleDateUnit(String unit) {
         if (unit.equals(DAY)) {
@@ -311,7 +297,7 @@ public class Util {
      * @param encoderBase64
      * @return
      */
-    public static X509Certificate getClientCertificate(String encoderBase64) {
+    /*public static X509Certificate getClientCertificate(String encoderBase64) {
         byte[] buffer = Base64.base64ToByteArray(encoderBase64.replaceAll("[\\n|\\r]", ""));
         InputStream bytearrayinputstream = new ByteArrayInputStream(buffer);
         try {
@@ -333,7 +319,7 @@ public class Util {
                 log.error(e.getStackTrace());
             }
         }
-    }
+    }*/
 
 
 
@@ -710,7 +696,7 @@ public class Util {
      * @param signedData 签名数据
      * @return map
      */
-    public static final HashMap getSignedData(String signedData) {
+    /*public static final HashMap getSignedData(String signedData) {
         try {
             HashMap result = new HashMap();
             MsXMLElement xml = new MsXMLElement();
@@ -743,7 +729,7 @@ public class Util {
         } catch (Exception e) {
             throw new IllegalArgumentException("invalid sign format");
         }
-    }
+    }*/
 
     /**
      * 把object 转换成SqlDate
@@ -824,9 +810,9 @@ public class Util {
 
 
 
-    public static String digest(String value) {
+    /*public static String digest(String value) {
         return CsiiUtils.digest(value + ABC_SEED);
-    }
+    }*/
 
 
     /**
@@ -834,12 +820,12 @@ public class Util {
      *
      * @param rep
      */
-    public static void isTrue(CommonResponse rep) {
+    /*public static void isTrue(CommonResponse rep) {
         //判断核心是否有返回错误
         if (!CommonResponseHead.SUCCESS.equals(rep.getCommonResponseHead().getRespCode())) {
             throw new RemoteRejectRuntimeException(rep.getCommonResponseHead().getRespCode(), rep.getCommonResponseHead().getRespMessage(), null);
         }
-    }
+    }*/
 
 
     /**
@@ -847,14 +833,14 @@ public class Util {
      *
      * @param list
      */
-    public static void isEmpty(List list) {
+    /*public static void isEmpty(List list) {
         if (list == null || list.size() == 0) {
             throw new ValidationRuntimeException(CHECKMSG.VALIDATION_LIST_EMPTY);//记录不存在
         }
-    }
+    }*/
 
     //直接将base64编码生成证书对象
-    public static X509Certificate generateCertFromBase64(String certBase64) {
+    /*public static X509Certificate generateCertFromBase64(String certBase64) {
         InputStream in = new ByteArrayInputStream(com.csii.pe.common.util.Base64.base64ToByteArray(certBase64));
         CertificateFactory cf;
         try {
@@ -867,7 +853,7 @@ public class Util {
             //System.out.println("ClientCert Generated Failed");
         }
         return null;
-    }
+    }*/
 
 
     static final Pattern variableFillingPattern = Pattern.compile("(\\$\\{)([\\w]+)(\\})");
@@ -877,7 +863,7 @@ public class Util {
      * @param map map
      * @return 替换后的字符串
      */
-    public static String variableFilling(String content, Map<String, Object> map) {
+    /*public static String variableFilling(String content, Map<String, Object> map) {
         Matcher m = variableFillingPattern.matcher(content);
         StringBuffer sb = new StringBuffer();
         while (m.find()) {
@@ -902,7 +888,7 @@ public class Util {
         }
 
         return sb.toString();
-    }
+    }*/
 
     /**
      * @param content 字符串内容
@@ -923,7 +909,7 @@ public class Util {
         return sb.toString();
     }
 
-    public static Map dealIdentity(String identity) throws ValidationException, ParseException {
+    /*public static Map dealIdentity(String identity) throws ValidationException, ParseException {
         //数字
         String nuPat = "^[0-9]{8}$";
         //中文
@@ -978,9 +964,9 @@ public class Util {
         }
         return idnoValidity;
 
-    }
+    }*/
 
-    public static Object getMapData(Map data, String fieldName){
+    /*public static Object getMapData(Map data, String fieldName){
         if(org.apache.commons.lang3.StringUtils.isBlank(fieldName)){
             return null;
         }
@@ -998,7 +984,7 @@ public class Util {
             result = ClassUtils.getObjectValue(data, fieldName);
         }
         return result;
-    }
+    }*/
 
     //短信验证码转换
     public static  byte[] getBytesWithGivenEncoding(String content, String encoding) {
