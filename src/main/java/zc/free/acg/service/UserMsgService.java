@@ -1,6 +1,6 @@
 package zc.free.acg.service;
 
-import zc.free.acg.domain.UserMsg;
+import zc.free.acg.model.UserMsg;
 
 import java.util.List;
 
