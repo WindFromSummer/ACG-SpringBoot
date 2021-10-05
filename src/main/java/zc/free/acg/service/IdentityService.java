@@ -1,9 +1,12 @@
 package zc.free.acg.service;
 
 import org.springframework.web.multipart.MultipartFile;
-import zc.free.acg.domain.*;
+import zc.free.acg.domain.IdentityBo;
+import zc.free.acg.domain.PageResult;
+import zc.free.acg.domain.UserIdentityApplyBo;
+import zc.free.acg.model.Identity;
+import zc.free.acg.model.UserIdentityApply;
 
-import java.io.File;
 import java.util.List;
 
 public interface IdentityService {
