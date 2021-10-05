@@ -1,9 +1,14 @@
 package zc.free.acg.service;
 
 import org.springframework.web.multipart.MultipartFile;
-import zc.free.acg.domain.*;
+import zc.free.acg.domain.ExhibitionBo;
+import zc.free.acg.domain.ExhibitionBo1;
+import zc.free.acg.domain.PageResult;
+import zc.free.acg.model.Exhibition;
+import zc.free.acg.model.ExhibitionDetails;
 
 import java.util.List;
+
 
 public interface ExhibitionService {
     /**
