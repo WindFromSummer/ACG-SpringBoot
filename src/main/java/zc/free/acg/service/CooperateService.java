@@ -1,11 +1,8 @@
 package zc.free.acg.service;
 
-import org.springframework.stereotype.Service;
-import zc.free.acg.domain.Cooperate;
 import zc.free.acg.domain.CooperateBo;
 import zc.free.acg.domain.PageResult;
-
-import java.util.List;
+import zc.free.acg.model.Cooperate;
 
 public interface CooperateService {
     /**
